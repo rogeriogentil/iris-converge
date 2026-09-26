@@ -93,8 +93,7 @@ The frontend MUST follow a feature-based architecture.
 - Technical layers MUST NOT be created prematurely merely to enforce architectural symmetry.
 - Architecture SHOULD evolve incrementally as the application grows.
 
-The project MUST avoid unnecessary fragmentation into technical layers such as controllers,
-services, repositories, and use cases when those abstractions do not provide meaningful value.
+Technical layers MUST NOT be introduced without a concrete responsibility or demonstrated need.
 
 ### III. Established Technology Stack
 
