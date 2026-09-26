@@ -112,53 +112,55 @@ An administrator sees all scheduled tasks with their status, last run result, an
 
 ---
 
-### User Story 5 - Diagnose problems from logs and events (Priority: P2)
+### User Story 5 - Browse and search audit events (Priority: P2)
 
-An operator investigating an incident opens the logs area. They choose a log source, narrow it to errors and warnings in the last hour, search for a keyword, and open an entry to see its full details. They can distinguish informational, warning, and error events at a glance.
+An operator investigating an incident opens the audit events area. The SysAdmin API exposes IRIS audit event records (`/v2/security/audit/records`); these are the operational events the portal surfaces. The operator filters by event type and time range, searches by text, and opens a record to see its full details. They can distinguish events by type and outcome at a glance.
 
-**Why this priority**: Diagnosis is the most frequent operational task after checking health, and it gives the dashboard's attention items somewhere to link to.
+**Why this priority**: Audit events are the operational record of who did what and when on the instance. Surfacing them in a searchable, filterable view gives both operators and security reviewers meaningful value. It gives the dashboard's attention items somewhere to link to.
 
-**Independent Test**: Produce a known warning in IRIS, then find it in the logs area by filtering on severity and searching its text, and open its details.
+**Independent Test**: Produce a known audit event in IRIS (for example, a failed login), then find it in the audit events area by filtering on event type and searching its text, and open its full record.
 
 **Acceptance Scenarios**:
 
-1. **Given** the logs area, **When** the user opens it, **Then** they can choose among the available log sources and each entry shows timestamp, severity (when available), source/subsystem (when available), and a message summary.
-2. **Given** a log source, **When** the user filters by severity and time range and enters a search term, **Then** only matching entries are shown and the active filters are visible and individually removable.
-3. **Given** a log entry, **When** the user opens it, **Then** they see its complete content, including any multi-line details, without losing their place or filters in the list.
-4. **Given** a log source that does not provide severity, **When** entries are displayed, **Then** the severity filter is unavailable for that source, and nothing implies that severity data exists.
-5. **Given** filters that match nothing, **When** the result is empty, **Then** the portal shows a "no matching entries" state that differs from "this log is empty" and offers to clear the filters.
+1. **Given** the audit events area, **When** the user opens it, **Then** each record shows timestamp, event name/type, username (when available), and an outcome or description summary.
+2. **Given** the audit event list, **When** the user filters by event type and time range and enters a search term, **Then** only matching records are shown and the active filters are visible and individually removable.
+3. **Given** an audit event record, **When** the user opens it, **Then** they see its complete content without losing their place or filters in the list.
+4. **Given** filters that match nothing, **When** the result is empty, **Then** the portal shows a "no matching records" state that differs from "no audit events exist" and offers to clear the filters.
+5. **Given** the user enables or disables audit logging for specific events, **When** the change is confirmed, **Then** the updated enabled state is reflected in the list of configured audit events (`/v2/security/audit/events`).
 
 ---
 
-### User Story 6 - Check operating system and resource status (Priority: P3)
+### User Story 6 - Monitor system resources and manage processes (Priority: P3)
 
-An operator checks the host IRIS runs on: CPU and memory usage, disk/storage capacity and free space, devices, and the processes running in IRIS. Values near a limit are clearly flagged, and they can drill into a process or disk to see its details.
+An operator checks the host IRIS runs on: CPU and memory usage, disk/storage capacity and free space, devices, and the processes running in IRIS. Values near a limit are clearly flagged. They drill into a process to see its details and, when needed, suspend, resume, or terminate it — each action requiring explicit confirmation that names the target and explains the consequence.
 
-**Why this priority**: The dashboard already summarizes resource status. This area adds depth for diagnosis.
+**Why this priority**: The dashboard summarizes resource status; this area adds depth for diagnosis and gives operators direct process control without needing another tool.
 
-**Independent Test**: Open the system area and confirm that CPU, memory, and storage values are shown with capacity context and threshold indicators, then open a process's detail.
+**Independent Test**: Open the system area, confirm CPU/memory/storage show capacity context and threshold indicators, open a process detail, suspend it, confirm the process state updates, then resume it.
 
 **Acceptance Scenarios**:
 
 1. **Given** the system area, **When** the user views it, **Then** CPU, memory, and storage usage are shown relative to capacity (for example percentage plus absolute values), with a clear indicator when a value crosses a warning or critical threshold.
-2. **Given** the process list, **When** the user views it, **Then** they can sort and search processes and open one to see its details.
-3. **Given** the system area is open, **When** time passes, **Then** values refresh periodically, the time of the last update is shown, and the user can refresh on demand or pause automatic refresh.
-4. **Given** a metric that the IRIS management capabilities do not expose on the current platform, **When** the area loads, **Then** that metric is marked "not available on this instance" rather than shown as zero.
+2. **Given** the process list, **When** the user views it, **Then** they can sort and search processes and open one to see its details including process ID, state, namespace, and resource usage.
+3. **Given** a process, **When** the user selects suspend, resume, or terminate and confirms, **Then** the action is submitted, the confirmation names the process and explains the consequence, and the process state updates to reflect the result.
+4. **Given** the user attempts to terminate the process running the portal itself, **When** they confirm, **Then** a specific warning explains that this may make the portal inaccessible before the final confirmation.
+5. **Given** the system area is open, **When** time passes, **Then** values refresh periodically, the time of the last update is shown, and the user can refresh on demand or pause automatic refresh.
+6. **Given** a metric that the IRIS management capabilities do not expose on the current platform, **When** the area loads, **Then** that metric is marked "not available on this instance" rather than shown as zero.
 
 ---
 
-### User Story 7 - Manage credentials and secrets safely (Priority: P3)
+### User Story 7 - Manage security resources and secrets safely (Priority: P3)
 
-An administrator reviews the security resources defined on the instance: credentials, X.509 credentials, wallets, OAuth configurations, and secrets. They create a credential for an outbound connection, update its password, check which X.509 certificates expire soon, and remove an unused credential, and at no point does the portal display a stored secret value.
+An administrator reviews the security resources defined on the instance: X.509 credentials, SSL configurations, wallets, wallet secrets, and OAuth configurations (client configurations, server definitions, and resource servers). They check which X.509 certificates expire soon, add a new SSL configuration, create a wallet secret, and register an OAuth client configuration — and at no point does the portal display a stored secret value.
 
 **Why this priority**: This is a named contest area and important for safety. It is used less often than the areas above.
 
-**Independent Test**: Create a credential with a password, confirm that the password never appears in any view afterward, update it, and delete it after confirming.
+**Independent Test**: Create an X.509 credential, confirm that the private key never appears in any view afterward, add a wallet secret and confirm its value is never shown, then delete both after confirming.
 
 **Acceptance Scenarios**:
 
-1. **Given** the security resources area, **When** the user opens it, **Then** credentials, X.509 credentials, wallets, OAuth configurations, and secrets each have their own section, and each section shows only non-sensitive identifying attributes in its list.
-2. **Given** a stored secret value (password, private key, client secret, secret content), **When** the user views the resource at any time after it is saved, **Then** the value is never displayed. The portal only shows that a value is set.
+1. **Given** the security resources area, **When** the user opens it, **Then** X.509 credentials, SSL configurations, wallets, wallet secrets, and OAuth configurations each have their own section, and each section shows only non-sensitive identifying attributes in its list.
+2. **Given** a stored secret value (private key, client secret, wallet secret content), **When** the user views the resource at any time after it is saved, **Then** the value is never displayed. The portal only shows that a value is set.
 3. **Given** a form field that accepts a secret value, **When** the user types into it, **Then** the input is masked by default, the field is marked as sensitive, and the entered value is not kept by the portal after the operation completes.
 4. **Given** an X.509 credential, **When** the user views it, **Then** they see its subject, issuer, and validity period, and certificates that are expired or expire within 30 days are flagged.
 5. **Given** a security resource type that the IRIS management capabilities do not support modifying, **When** the user views it, **Then** it is presented as read-only and create/edit/delete actions are not offered.
@@ -188,7 +190,7 @@ A technical user wants to understand what management operations IRIS exposes. Th
 - **Session expiry**: The session expires while the user is filling in a form. The user is told that the session expired and is asked to sign in again. Wherever possible they return to where they were, and the non-sensitive values they entered are kept.
 - **Insufficient privileges**: The signed-in user lacks the privilege to view an area or perform an action. The portal shows a permission-denied state that names the missing capability in plain language when it can be determined. It does not show a generic failure.
 - **Concurrent modification**: An entity is changed or deleted by someone else while a user is viewing or editing it. On save the user is told that the entity changed or no longer exists, and the view refreshes to its current state.
-- **Large data volumes**: The instance has thousands of users, tasks, processes, or log entries. Lists stay usable through search, filtering, and incremental loading, and a list is never truncated silently.
+- **Large data volumes**: The instance has thousands of users, tasks, processes, or audit event records. Lists stay usable through search, filtering, and incremental loading, and a list is never truncated silently.
 - **Self-lockout**: The user changes their own user, their own roles, or the web application serving the portal. A specific warning explains the risk of losing access.
 - **In-use resource removal**: The user deletes a role that is assigned to users, a credential referenced elsewhere, or a web application in use. The confirmation states the known impact. When the impact can't be determined, it says so.
 - **Protected/system entities**: Predefined roles, system web applications, and system tasks that IRIS protects are marked as system entities. Actions IRIS won't allow on them are unavailable, and the reason is shown.
@@ -196,6 +198,7 @@ A technical user wants to understand what management operations IRIS exposes. Th
 - **Unsupported capability**: The connected IRIS version does not expose a management capability. The area or action is marked "not supported by this instance". It is never shown broken or empty.
 - **Time zones**: Timestamps are shown with an unambiguous time-zone indication, so log times and task schedules can be compared with each other.
 - **Task already running**: The user runs a task that is already running, or disables it mid-run. The portal explains the current state and what the action will do.
+- **Process already terminated**: The user attempts to suspend or terminate a process that ended between when the list loaded and when they confirmed. The portal shows the current process state (not found or already terminated) and does not treat this as an unrecoverable error.
 
 ## Requirements *(mandatory)*
 
@@ -211,7 +214,7 @@ A technical user wants to understand what management operations IRIS exposes. Th
 
 #### Navigation and Information Architecture
 
-- **FR-006**: The portal MUST provide persistent navigation to the dashboard and to each management area: Permissions (Users, Roles, Resources), Web Applications, Security Resources, Tasks, System, and Logs (plus API Explorer if delivered).
+- **FR-006**: The portal MUST provide persistent navigation to the dashboard and to each management area: Permissions (Users, Roles, Resources), Web Applications, Security Resources, Tasks, System, and Audit Events (plus API Explorer if delivered).
 - **FR-007**: The portal MUST show where the user currently is, both by highlighting the active area in navigation and by showing a location trail (breadcrumb) in detail views.
 - **FR-008**: Every list item MUST lead to its detail view, and detail views MUST let users return to the list with its previous search, filter, sort, and position preserved.
 - **FR-009**: Every view MUST have a stable, shareable address so that reloading or opening it directly shows the same view (subject to sign-in and authorization).
@@ -222,7 +225,7 @@ A technical user wants to understand what management operations IRIS exposes. Th
 
 - **FR-012**: The dashboard MUST summarize system resource status (CPU, memory, storage), with each value shown against warning/critical thresholds.
 - **FR-013**: The dashboard MUST summarize task health, including counts of tasks that failed their last run and tasks that are suspended.
-- **FR-014**: The dashboard MUST show recent error and warning events with counts, and let the user open the underlying entries.
+- **FR-014**: The dashboard MUST show a summary of recent IRIS audit events (sourced from `/v2/security/audit/records`), with counts, and let the user open the underlying records in the audit events area.
 - **FR-015**: The dashboard MUST surface security and configuration items that need attention, at minimum X.509 certificates that are expired or expire within 30 days, when that information is available.
 - **FR-016**: Every dashboard item MUST link to the corresponding area or detail view.
 - **FR-017**: Each dashboard section MUST load and fail independently, so that one unavailable data source does not prevent the rest of the dashboard from displaying.
@@ -250,9 +253,9 @@ A technical user wants to understand what management operations IRIS exposes. Th
 
 #### Security and Secrets Management
 
-- **FR-033**: The portal MUST provide sections for credentials, X.509 credentials, wallets, OAuth configurations, and secrets, each listing resources by their non-sensitive identifying attributes.
-- **FR-034**: Users MUST be able to inspect, create, update, enable/disable, and delete these resources where the IRIS management capabilities support it. Unsupported operations MUST NOT be offered.
-- **FR-035**: The portal MUST NOT display stored secret values (passwords, private keys, client secrets, secret contents) after they are saved. It MUST indicate only whether a value is set.
+- **FR-033**: The portal MUST provide sections for X.509 credentials, SSL configurations, wallets, wallet secrets, and OAuth configurations (OAuth client configurations, OAuth server definitions, and OAuth resource servers), each listing resources by their non-sensitive identifying attributes. Generic username/password credentials are out of scope (no SysAdmin API endpoint exists for them).
+- **FR-034**: Users MUST be able to inspect, create, update, enable/disable, and delete these resources where the SysAdmin API supports it. Unsupported operations MUST NOT be offered.
+- **FR-035**: The portal MUST NOT display stored secret values (private keys, client secrets, wallet secret contents) after they are saved. It MUST indicate only whether a value is set.
 - **FR-036**: Secret input fields MUST be masked by default, clearly marked as sensitive, and cleared by the portal once the operation completes.
 - **FR-037**: The portal MUST NOT store secret values persistently on the user's device and MUST NOT include them in the portal's own diagnostic output.
 - **FR-038**: For X.509 credentials, the portal MUST show subject, issuer, and validity period, and flag certificates that are expired or expire within 30 days.
@@ -270,20 +273,21 @@ A technical user wants to understand what management operations IRIS exposes. Th
 #### Operating System Management
 
 - **FR-046**: The portal MUST show CPU, memory, and disk/storage usage relative to capacity, with warning and critical threshold indicators.
-- **FR-047**: The portal MUST show processes, with sorting, searching, and a detail view.
-- **FR-048**: The portal MUST show devices and any other operating-system information exposed by the IRIS management capabilities.
-- **FR-049**: Operational values MUST refresh periodically, show the time of the last update, and support manual refresh and pausing of automatic refresh.
-- **FR-050**: Metrics that are unavailable on the instance MUST be shown as unavailable, never as zero or blank.
-- **FR-051**: The operating-system area is read-only in this release. It MUST NOT offer actions that change processes, devices, or host state.
+- **FR-047**: The portal MUST show processes with sorting, searching, and a detail view showing process ID, state, namespace, and resource usage.
+- **FR-048**: The portal MUST allow users to suspend, resume, and terminate individual processes. Each action MUST require explicit confirmation that names the target process and describes the consequence. The broadcast action is out of scope.
+- **FR-049**: The portal MUST warn specifically before terminating a process that is running the portal itself, and before terminating any system-critical process when that can be determined.
+- **FR-050**: The portal MUST show devices and any other operating-system information exposed by the SysAdmin API.
+- **FR-051**: Operational values MUST refresh periodically, show the time of the last update, and support manual refresh and pausing of automatic refresh.
+- **FR-051b**: Metrics that are unavailable on the instance MUST be shown as unavailable, never as zero or blank.
 
-#### Logs and Operational Events
+#### Audit Events
 
-- **FR-052**: Users MUST be able to choose among the available IRIS log sources.
-- **FR-053**: Each log entry MUST show timestamp, and severity and source/subsystem where the underlying information provides them.
-- **FR-054**: Users MUST be able to search log entries by text and filter by severity and time range, with active filters visible and individually removable.
-- **FR-055**: Users MUST be able to open a log entry to see its full content without losing their list position or filters.
-- **FR-056**: Informational, warning, and error entries MUST be visually distinguished, and not by color alone.
-- **FR-057**: Filters that don't apply to a log source (for example severity where none exists) MUST be unavailable for that source.
+- **FR-052**: The portal MUST provide an audit events area that displays IRIS audit event records from the SysAdmin API (`/v2/security/audit/records`).
+- **FR-053**: Each audit event record MUST show timestamp, event name/type, username (when available), and a description or outcome summary.
+- **FR-054**: Users MUST be able to search audit records by text and filter by event type and time range, with active filters visible and individually removable.
+- **FR-055**: Users MUST be able to open an audit event record to see its full content without losing their list position or filters.
+- **FR-056**: Users MUST be able to view the list of configured audit event types (`/v2/security/audit/events`) and enable or disable individual event types where supported.
+- **FR-057**: The audit events area is scoped to IRIS audit records only. Application-level logs (such as `messages.log` or CCONSOLE) are out of scope for this release, as the SysAdmin API does not expose them.
 
 #### Data and Operation States
 
@@ -332,17 +336,19 @@ A technical user wants to understand what management operations IRIS exposes. Th
 - **Privilege**: A pairing of a Resource with one or more permissions (such as Read, Write, Use) granted by a Role.
 - **Web Application**: A URL path configuration. It has a type (REST, web pages, other), namespace, enabled state, authentication settings, dispatch configuration, and system/user-defined flag.
 - **REST Endpoint**: A method-and-path route exposed by a REST Web Application, with a handler or description when available.
-- **Credential**: A named identity with a username and a secret value (never displayed), used for outbound connections.
 - **X.509 Credential**: A certificate with an optional private key (never displayed). It has a subject, issuer, validity period, and expiry status.
-- **Wallet**: A container for secure keys or certificates, identified by name. Its sensitive contents are never displayed.
-- **OAuth Configuration**: An OAuth client or server definition with identifying and endpoint attributes. Its client secrets are never displayed.
-- **Secret**: A named stored sensitive value. Its value is never displayed.
+- **SSL Configuration**: A named TLS/SSL configuration (cipher suites, certificate, verification settings). Used by services and web applications.
+- **Wallet**: A named container for secure keys or certificates. Its sensitive contents are never displayed.
+- **Wallet Secret**: A named secret stored inside a Wallet. Its value is never displayed.
+- **OAuth Client Configuration**: An OAuth client registered with an authorization server, including endpoint URLs. Its client secret is never displayed.
+- **OAuth Server Definition**: A locally defined OAuth authorization server definition.
+- **OAuth Resource Server**: An OAuth resource server registration that validates tokens from an authorization server.
 - **Task**: A scheduled job. It has a name, namespace, enabled/suspended state, schedule, and system/user-defined flag, and it has Task Runs.
 - **Task Run**: One execution of a Task, with start/end time, result (success/failure), and error details.
 - **Process**: A running IRIS process with an identifier, state, and resource usage attributes.
 - **System Metric**: A measured operational value (CPU, memory, storage, device) with capacity, current value, threshold status, and measurement time.
-- **Log Source**: A named IRIS log or event stream. It indicates which attributes (severity, source) it provides.
-- **Log Entry**: One logged event, with timestamp, severity (optional), source/subsystem (optional), message, and full details.
+- **Audit Event Type**: A named auditable action (such as login, logout, resource access). It has a name, description, and enabled state.
+- **Audit Event Record**: One recorded audit event, with timestamp, event type, username (optional), and full detail payload.
 - **Operation Result**: The outcome of an administrative action. It records the operation attempted, the target, success/failure, a plain-language message, technical details, and whether the state changed.
 
 ## Success Criteria *(mandatory)*
@@ -351,7 +357,7 @@ A technical user wants to understand what management operations IRIS exposes. Th
 
 - **SC-001**: A first-time user who knows IRIS can start from the dashboard and reach any of the six management areas in at most 2 interactions, and can return to the dashboard from any view in 1 interaction.
 - **SC-002**: An administrator can determine which role(s) give a specific user a specific privilege in under 1 minute, without leaving the portal or consulting another tool.
-- **SC-003**: An operator can find a specific error event from the last 24 hours, using filtering and search, in under 30 seconds.
+- **SC-003**: An operator can find a specific audit event from the last 24 hours, using event-type filtering and text search, in under 30 seconds.
 - **SC-004**: An administrator can create a user, assign a role, and confirm the resulting effective privileges in under 3 minutes.
 - **SC-005**: 100% of destructive actions (deletions, disables, revocations, task runs) require an explicit confirmation that names the target entity.
 - **SC-006**: 0 stored secret values are displayed anywhere in the portal after being saved, as verified by inspecting every security resource view and the API explorer.
@@ -368,11 +374,11 @@ A technical user wants to understand what management operations IRIS exposes. Th
 - **Authentication and authorization**: IRIS is responsible for both. Users sign in with existing IRIS accounts, and what they can see and do is governed by their IRIS roles and privileges. The portal adds no access rules of its own.
 - **IRIS capabilities define the boundary**: The portal exposes only what the IRIS management capabilities support. Where a capability is missing on the connected IRIS version, the portal marks it as unsupported instead of working around it.
 - **Contest scope over completeness**: The portal is a focused contest submission. It does not reproduce every capability of the native Management Portal, and it offers deep links or references to the native portal for capabilities it does not cover.
-- **Operating system area is read-only**: Terminating processes or changing host or device settings is out of scope for this release.
+- **Process actions in scope**: The System area allows suspending, resuming, and terminating individual processes (all supported by the SysAdmin API). The broadcast action and changes to devices or host-level settings remain out of scope.
 - **API Explorer is optional**: User Story 8 (P4) is built only after the higher-priority stories are complete.
 - **Default thresholds**: Resource thresholds default to warning at 80% and critical at 90% usage. Certificate expiry warnings default to 30 days.
 - **Refresh interval**: Operational values refresh automatically every 15 seconds by default.
-- **Log history**: The history the portal can show is limited to what IRIS retains. The portal does not archive logs itself.
+- **Audit event history**: The audit event history the portal can show is limited to what IRIS retains in its audit database. The portal does not archive events itself.
 - **Language**: English is the delivered interface language. Text is structured so it can be translated later.
 - **Supported browsers**: The current versions of the major evergreen desktop and mobile browsers are supported.
 - **Audience**: Users are technically literate and familiar with basic IRIS concepts (namespaces, roles, web applications). The portal explains IRIS-specific terms but does not teach IRIS from scratch.
@@ -387,6 +393,17 @@ A technical user wants to understand what management operations IRIS exposes. Th
 - Namespace, database, and journal configuration beyond what the in-scope areas need to display.
 - Interoperability production management.
 - SQL query execution, class/routine editing, or code deployment.
-- Terminating processes or changing operating-system settings.
+- Changing device configuration or host-level operating-system settings. Broadcasting messages to all processes.
 - Custom alerting, notifications to external channels, or historical metric storage and trending beyond what IRIS provides.
 - A portal-specific user, role, or permission model separate from IRIS security.
+- Generic username/password credentials (e.g., outbound connection credentials) — the SysAdmin API does not expose an endpoint for them.
+- Application-level logs (IRIS `messages.log`, CCONSOLE log) — the SysAdmin API does not expose these; the portal covers audit events only.
+
+## Clarifications
+
+### Session 2026-09-26
+
+- Q: What should the "Logs and Operational Events" area cover given that the SysAdmin API only exposes audit event records? → A: Scope the area to IRIS audit events only (what the API actually exposes). Renamed to "Audit Events" throughout the spec.
+- Q: How should the spec handle "credentials" in the Security Resources area given that the SysAdmin API has no generic credentials endpoint? → A: Remove generic credentials as a named section. Security Resources covers X.509 credentials, SSL configurations, wallets, wallet secrets, and OAuth configurations only.
+- Q: What should the Security Resources area be called in navigation? → A: "Security Resources" — already consistent in the spec and accurate for the content.
+- Q: Should the System area allow process actions given the SysAdmin API supports suspend/resume/terminate/broadcast? → A: Allow suspend, resume, and terminate with explicit confirmation; exclude broadcast. FR-048/FR-049 updated accordingly.
