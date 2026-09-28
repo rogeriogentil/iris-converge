@@ -1,0 +1,7 @@
+{
+  "name": "iris-converge",
+  "version": "0.1.0",
+  "description": "IRIS Management Portal",
+  "webAppName": "/iris-converge",
+  "staticDir": "dist/"
+}

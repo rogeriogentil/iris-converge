@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Environment overrides — never commit secrets or local instance URLs
+.env.local
+.env.*.local
+
+# Vite cache
+.vite/
+
+# TypeScript build info
+*.tsbuildinfo
+node_modules/.tmp/
+
+# Playwright test results and reports
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage
+coverage/

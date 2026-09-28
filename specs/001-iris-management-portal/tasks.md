@@ -20,18 +20,18 @@
 
 **Purpose**: Initialize the project with the exact stack from [plan.md](plan.md). All tasks in this phase must complete before Phase 2.
 
-- [ ] T001 Scaffold Vite 6 + React 19 + TypeScript 5 project at repo root: `npm create vite@latest . -- --template react-ts`
-- [ ] T002 Install TanStack packages: `@tanstack/react-router`, `@tanstack/react-query`, `@tanstack/react-table`, `@tanstack/react-form` in `package.json`
-- [ ] T003 [P] Install Zod, Lucide React, `i18next`, `react-i18next`, `i18next-browser-languagedetector` in `package.json`
-- [ ] T004 [P] Install and configure Tailwind CSS v4: `tailwind.css` with `@import "tailwindcss"`, update `vite.config.ts` with `@tailwindcss/vite` plugin
-- [ ] T005 [P] Initialise shadcn/ui for Tailwind v4: run `npx shadcn@latest init`, configure `components.json`
-- [ ] T006 [P] Configure ESLint with `eslint-plugin-jsx-a11y` and `@typescript-eslint/eslint-plugin`; create `.eslintrc.cjs`
-- [ ] T007 [P] Configure Vitest: add `vitest.config.ts`, install `@vitest/ui`, `@testing-library/react`, `@testing-library/user-event`, `jsdom`
-- [ ] T008 [P] Configure Playwright: run `npm init playwright@latest`; set base URL to `http://localhost:5173` in `playwright.config.ts`
-- [ ] T009 Create `.env`, `.env.development`, `.env.production` files per [contracts/config.md](contracts/config.md); add `.env.local` to `.gitignore`
-- [ ] T010 Create full directory tree per plan.md §Project Structure: `src/app/`, `src/features/`, `src/shared/`, `src/types/`, `iris/src/IrisConverge/`
-- [ ] T011 [P] Configure TanStack Router file-based routes: add `@tanstack/router-vite-plugin` to `vite.config.ts`; create `src/app/router.tsx` skeleton
-- [ ] T012 [P] Add `ipm.json` IPM package manifest at `iris/ipm.json` per [contracts/config.md](contracts/config.md)
+- [x] T001 Scaffold Vite 6 + React 19 + TypeScript 5 project at repo root: `npm create vite@latest . -- --template react-ts`
+- [x] T002 Install TanStack packages: `@tanstack/react-router`, `@tanstack/react-query`, `@tanstack/react-table`, `@tanstack/react-form` in `package.json`
+- [x] T003 [P] Install Zod, Lucide React, `i18next`, `react-i18next`, `i18next-browser-languagedetector` in `package.json`
+- [x] T004 [P] Install and configure Tailwind CSS v4: `tailwind.css` with `@import "tailwindcss"`, update `vite.config.ts` with `@tailwindcss/vite` plugin
+- [x] T005 [P] Initialise shadcn/ui for Tailwind v4: run `npx shadcn@latest init`, configure `components.json`
+- [x] T006 [P] Configure ESLint with `eslint-plugin-jsx-a11y` and `@typescript-eslint/eslint-plugin`; create `.eslintrc.cjs`
+- [x] T007 [P] Configure Vitest: add `vitest.config.ts`, install `@vitest/ui`, `@testing-library/react`, `@testing-library/user-event`, `jsdom`
+- [x] T008 [P] Configure Playwright: run `npm init playwright@latest`; set base URL to `http://localhost:5173` in `playwright.config.ts`
+- [x] T009 Create `.env`, `.env.development`, `.env.production` files per [contracts/config.md](contracts/config.md); add `.env.local` to `.gitignore`
+- [x] T010 Create full directory tree per plan.md §Project Structure: `src/app/`, `src/features/`, `src/shared/`, `src/types/`, `iris/src/IrisConverge/`
+- [x] T011 [P] Configure TanStack Router file-based routes: add `@tanstack/router-vite-plugin` to `vite.config.ts`; create `src/app/router.tsx` skeleton
+- [x] T012 [P] Add `ipm.json` IPM package manifest at `iris/ipm.json` per [contracts/config.md](contracts/config.md)
 
 **Checkpoint**: `npm run dev` starts without errors; project tree matches plan.md.
 
@@ -43,26 +43,26 @@
 
 **⚠️ CRITICAL**: No user story implementation can begin until this phase is complete.
 
-- [ ] T013 Define `BaseResponse<T>` and `ApiError` types in `src/types/api.ts`
-- [ ] T014 Implement auth token store in `src/shared/http/auth-store.ts`: access token in module variable; refresh token in `sessionStorage`; `setTokens()`, `getAccessToken()`, `getRefreshToken()`, `clearTokens()`, proactive refresh scheduling via `setTimeout`
-- [ ] T015 Implement shared HTTP client in `src/shared/http/client.ts`: `apiFetch(path, options)` wraps `fetch`; attaches `Authorization: Bearer`; unwraps `{ result }` envelope; normalises 4xx/5xx into `ApiError`; handles 401 → calls `POST /refresh` once then retries; handles network errors
-- [ ] T016 Implement async-polling helper in `src/shared/http/async-poll.ts`: polls `GET /v2/async-result?id=X` every 2 s; resolves on `status === "complete"`; rejects on `status === "error"`; supports cancel
-- [ ] T017 [P] Unit test HTTP client error normalisation in `src/shared/http/__tests__/client.test.ts`: 400 field errors, 401 refresh retry, 403 permission, 404 not-found, 500 server error, network failure
-- [ ] T018 [P] Unit test auth-store token lifecycle in `src/shared/http/__tests__/auth-store.test.ts`: setTokens, getAccessToken, clearTokens, sessionStorage persistence
-- [ ] T019 Implement `src/shared/utils/permissions.ts`: `permissionsToLabels(s: string): string[]` maps `"RWU"` → `["Read","Write","Use"]`; `traverseRoleHierarchy(rootRoles, roleMap)` returns flat `EffectivePrivilege[]` with cycle detection
-- [ ] T020 [P] Unit test `src/shared/utils/permissions.ts`: single role, nested roles, cyclic roles, all permission combinations
-- [ ] T021 [P] Implement `src/shared/utils/schedule.ts`: `scheduleToHuman(task: Task): string` converts task schedule fields to plain language ("Daily at 02:00", "Every Monday at 03:00", "Once on 2027-01-15")
-- [ ] T022 [P] Unit test `src/shared/utils/schedule.ts`: daily, weekly, monthly, one-time, and disabled schedule variants
-- [ ] T023 [P] Implement `src/shared/utils/date.ts`: `formatTimestamp(iso: string): string` formats to "Sep 26, 2026 17:30 UTC+3" (timezone-aware); `daysUntil(iso: string): number`; `isExpired(iso: string): boolean`
-- [ ] T024 Create `src/shared/components/PageLayout/PageLayout.tsx`: shell with persistent sidebar on desktop (collapsible), drawer on mobile (`Sheet` from shadcn/ui); `NavItem` list driven by [contracts/routes.md](contracts/routes.md) nav labels; highlights active route via TanStack Router
-- [ ] T025 [P] Add shadcn/ui components used across all features: `Button`, `Dialog`, `AlertDialog`, `Sheet`, `Badge`, `Skeleton`, `Separator`, `Tooltip`, `Toast` (`Sonner`) via `npx shadcn@latest add`
-- [ ] T026 [P] Create `src/shared/components/ConfirmDialog/ConfirmDialog.tsx`: wraps `AlertDialog`; props: `title`, `description`, `consequence`, `onConfirm`, `onCancel`; initial focus on cancel button (FR-069)
-- [ ] T027 [P] Create `src/shared/components/DataTable/DataTable.tsx`: wraps TanStack Table; supports sorting, column visibility, pagination; `EmptyState` slot for no-results and no-data-exists states
-- [ ] T028 [P] Create `src/shared/components/EmptyState/EmptyState.tsx` and `src/shared/components/ErrorState/ErrorState.tsx`: props: `title`, `description`, optional `action` (label + onClick); covers all states in FR-058
-- [ ] T029 Set up i18next in `src/shared/i18n/index.ts`: `languageDetector` with `en` fallback; synchronous JSON bundle loading; create empty namespace files under `src/shared/i18n/locales/en/` (navigation.json, common.json, errors.json)
-- [ ] T030 Create `src/app/providers.tsx`: wraps app in `QueryClientProvider`, `I18nextProvider`, React Router `RouterProvider`, and a global `ErrorBoundary` class component that logs via a shared `logger` utility and renders a recovery screen
-- [ ] T031 [P] Implement `src/shared/utils/logger.ts`: thin wrapper over `console`; can be swapped in tests
-- [ ] T032 Wire up `src/app/main.tsx`: mount `<Providers />` onto `#root`; configure `QueryClient` with defaults (staleTime 30 s, retry 1)
+- [x] T013 Define `BaseResponse<T>` and `ApiError` types in `src/types/api.ts`
+- [x] T014 Implement auth token store in `src/shared/http/auth-store.ts`: access token in module variable; refresh token in `sessionStorage`; `setTokens()`, `getAccessToken()`, `getRefreshToken()`, `clearTokens()`, proactive refresh scheduling via `setTimeout`
+- [x] T015 Implement shared HTTP client in `src/shared/http/client.ts`: `apiFetch(path, options)` wraps `fetch`; attaches `Authorization: Bearer`; unwraps `{ result }` envelope; normalises 4xx/5xx into `ApiError`; handles 401 → calls `POST /refresh` once then retries; handles network errors
+- [x] T016 Implement async-polling helper in `src/shared/http/async-poll.ts`: polls `GET /v2/async-result?id=X` every 2 s; resolves on `status === "complete"`; rejects on `status === "error"`; supports cancel
+- [x] T017 [P] Unit test HTTP client error normalisation in `src/shared/http/__tests__/client.test.ts`: 400 field errors, 401 refresh retry, 403 permission, 404 not-found, 500 server error, network failure
+- [x] T018 [P] Unit test auth-store token lifecycle in `src/shared/http/__tests__/auth-store.test.ts`: setTokens, getAccessToken, clearTokens, sessionStorage persistence
+- [x] T019 Implement `src/shared/utils/permissions.ts`: `permissionsToLabels(s: string): string[]` maps `"RWU"` → `["Read","Write","Use"]`; `traverseRoleHierarchy(rootRoles, roleMap)` returns flat `EffectivePrivilege[]` with cycle detection
+- [x] T020 [P] Unit test `src/shared/utils/permissions.ts`: single role, nested roles, cyclic roles, all permission combinations
+- [x] T021 [P] Implement `src/shared/utils/schedule.ts`: `scheduleToHuman(task: Task): string` converts task schedule fields to plain language ("Daily at 02:00", "Every Monday at 03:00", "Once on 2027-01-15")
+- [x] T022 [P] Unit test `src/shared/utils/schedule.ts`: daily, weekly, monthly, one-time, and disabled schedule variants
+- [x] T023 [P] Implement `src/shared/utils/date.ts`: `formatTimestamp(iso: string): string` formats to "Sep 26, 2026 17:30 UTC+3" (timezone-aware); `daysUntil(iso: string): number`; `isExpired(iso: string): boolean`
+- [x] T024 Create `src/shared/components/PageLayout/PageLayout.tsx`: shell with persistent sidebar on desktop (collapsible), drawer on mobile (`Sheet` from shadcn/ui); `NavItem` list driven by [contracts/routes.md](contracts/routes.md) nav labels; highlights active route via TanStack Router
+- [x] T025 [P] Add shadcn/ui components used across all features: `Button`, `Dialog`, `AlertDialog`, `Sheet`, `Badge`, `Skeleton`, `Separator`, `Tooltip`, `Toast` (`Sonner`) via `npx shadcn@latest add`
+- [x] T026 [P] Create `src/shared/components/ConfirmDialog/ConfirmDialog.tsx`: wraps `AlertDialog`; props: `title`, `description`, `consequence`, `onConfirm`, `onCancel`; initial focus on cancel button (FR-069)
+- [x] T027 [P] Create `src/shared/components/DataTable/DataTable.tsx`: wraps TanStack Table; supports sorting, column visibility, pagination; `EmptyState` slot for no-results and no-data-exists states
+- [x] T028 [P] Create `src/shared/components/EmptyState/EmptyState.tsx` and `src/shared/components/ErrorState/ErrorState.tsx`: props: `title`, `description`, optional `action` (label + onClick); covers all states in FR-058
+- [x] T029 Set up i18next in `src/shared/i18n/index.ts`: `languageDetector` with `en` fallback; synchronous JSON bundle loading; create empty namespace files under `src/shared/i18n/locales/en/` (navigation.json, common.json, errors.json)
+- [x] T030 Create `src/app/providers.tsx`: wraps app in `QueryClientProvider`, `I18nextProvider`, React Router `RouterProvider`, and a global `ErrorBoundary` class component that logs via a shared `logger` utility and renders a recovery screen
+- [x] T031 [P] Implement `src/shared/utils/logger.ts`: thin wrapper over `console`; can be swapped in tests
+- [x] T032 Wire up `src/app/main.tsx`: mount `<Providers />` onto `#root`; configure `QueryClient` with defaults (staleTime 30 s, retry 1)
 
 **Checkpoint**: `npm test` passes for HTTP client and utility unit tests. `npm run dev` renders the shell with sidebar and no route content.
 
@@ -74,22 +74,22 @@
 
 **Independent Test**: See [quickstart.md §S1 and §S2](quickstart.md).
 
-- [ ] T033 [US1] Define auth types in `src/features/auth/types.ts`: `LoginRequest`, `LoginResponse`, `ServerInfo`, `Session` (from [data-model.md §Auth](data-model.md))
-- [ ] T034 [US1] Implement `useSignIn` hook in `src/features/auth/hooks/useSignIn.ts`: calls `POST /login`; stores tokens via auth-store; returns `session` state; handles invalid-credentials 401 as form error
-- [ ] T035 [P] [US1] Implement `useSignOut` hook in `src/features/auth/hooks/useSignOut.ts`: calls `POST /logout` with refresh token; clears tokens; redirects to `/sign-in`
-- [ ] T036 [P] [US1] Implement `useSession` hook in `src/features/auth/hooks/useSession.ts`: calls `GET /info` via TanStack Query; returns `Session`; used by header and dashboard
-- [ ] T037 [US1] Create `src/features/auth/components/SignInForm.tsx`: controlled form with username + password fields; Zod validation (both required); submit calls `useSignIn`; field-level errors; loading state on submit; no password-reveal by default (FR-036)
-- [ ] T038 [US1] Create sign-in route `src/features/auth/routes/sign-in.tsx` at path `/sign-in`; unauthenticated entry point; redirects to `?redirect` target on success
-- [ ] T039 [US1] Add TanStack Router auth guard in `src/app/router.tsx`: `beforeLoad` checks `getAccessToken()`; redirects to `/sign-in?redirect=<current>` if absent
-- [ ] T040 [P] [US1] Define dashboard types in `src/features/dashboard/types.ts`: `DashboardStats`, `PanelState<T>`, `CertExpiryAlert` (from [data-model.md §Dashboard](data-model.md))
-- [ ] T041 [US1] Implement `useDashboardData` hook in `src/features/dashboard/hooks/useDashboardData.ts`: `useQueries` for three independent queries — `GET /v2/monitor/dashboard/main`, `POST /v2/security/audit/records` (last 24 h, max 20), `GET /v2/security/x509-credentials`; each query returns `PanelState<T>`
-- [ ] T042 [P] [US1] Create `src/features/dashboard/components/MetricPanel.tsx`: displays system usage (DatabaseSpace, JournalSpace, LockTable, WriteDaemon, Processes, CSPSessions) from `SystemUsage`; status badge per value ("Normal"/"Warning"/"Critical")
-- [ ] T043 [P] [US1] Create `src/features/dashboard/components/TaskPanel.tsx`: displays upcoming tasks from `MainDashboardStats.UpcomingTasks`; links to Tasks area
-- [ ] T044 [P] [US1] Create `src/features/dashboard/components/AuditPanel.tsx`: shows recent audit event count and last few records; links to Audit Events area
-- [ ] T045 [P] [US1] Create `src/features/dashboard/components/CertPanel.tsx`: lists X.509 credentials; flags expired/expiring-soon using `daysUntil()` and `isExpired()` from date utils; links to Security Resources
-- [ ] T046 [US1] Create dashboard route `src/features/dashboard/routes/index.tsx` at path `/`: renders four panels via `useDashboardData`; each panel independently shows loading skeleton, data, error, or unavailable state (FR-017)
-- [ ] T047 [P] [US1] Add session info to `PageLayout` header: signed-in username and IRIS version from `useSession` (FR-003); sign-out button calls `useSignOut`
-- [ ] T048 [P] [US1] Add i18n translations for auth and dashboard in `src/shared/i18n/locales/en/auth.json` and `src/shared/i18n/locales/en/dashboard.json`
+- [x] T033 [US1] Define auth types in `src/features/auth/types.ts`: `LoginRequest`, `LoginResponse`, `ServerInfo`, `Session` (from [data-model.md §Auth](data-model.md))
+- [x] T034 [US1] Implement `useSignIn` hook in `src/features/auth/hooks/useSignIn.ts`: calls `POST /login`; stores tokens via auth-store; returns `session` state; handles invalid-credentials 401 as form error
+- [x] T035 [P] [US1] Implement `useSignOut` hook in `src/features/auth/hooks/useSignOut.ts`: calls `POST /logout` with refresh token; clears tokens; redirects to `/sign-in`
+- [x] T036 [P] [US1] Implement `useSession` hook in `src/features/auth/hooks/useSession.ts`: calls `GET /info` via TanStack Query; returns `Session`; used by header and dashboard
+- [x] T037 [US1] Create `src/features/auth/components/SignInForm.tsx`: controlled form with username + password fields; Zod validation (both required); submit calls `useSignIn`; field-level errors; loading state on submit; no password-reveal by default (FR-036)
+- [x] T038 [US1] Create sign-in route `src/features/auth/routes/sign-in.tsx` at path `/sign-in`; unauthenticated entry point; redirects to `?redirect` target on success
+- [x] T039 [US1] Add TanStack Router auth guard in `src/app/router.tsx`: `beforeLoad` checks `getAccessToken()`; redirects to `/sign-in?redirect=<current>` if absent
+- [x] T040 [P] [US1] Define dashboard types in `src/features/dashboard/types.ts`: `DashboardStats`, `PanelState<T>`, `CertExpiryAlert` (from [data-model.md §Dashboard](data-model.md))
+- [x] T041 [US1] Implement `useDashboardData` hook in `src/features/dashboard/hooks/useDashboardData.ts`: `useQueries` for three independent queries — `GET /v2/monitor/dashboard/main`, `POST /v2/security/audit/records` (last 24 h, max 20), `GET /v2/security/x509-credentials`; each query returns `PanelState<T>`
+- [x] T042 [P] [US1] Create `src/features/dashboard/components/MetricPanel.tsx`: displays system usage (DatabaseSpace, JournalSpace, LockTable, WriteDaemon, Processes, CSPSessions) from `SystemUsage`; status badge per value ("Normal"/"Warning"/"Critical")
+- [x] T043 [P] [US1] Create `src/features/dashboard/components/TaskPanel.tsx`: displays upcoming tasks from `MainDashboardStats.UpcomingTasks`; links to Tasks area
+- [x] T044 [P] [US1] Create `src/features/dashboard/components/AuditPanel.tsx`: shows recent audit event count and last few records; links to Audit Events area
+- [x] T045 [P] [US1] Create `src/features/dashboard/components/CertPanel.tsx`: lists X.509 credentials; flags expired/expiring-soon using `daysUntil()` and `isExpired()` from date utils; links to Security Resources
+- [x] T046 [US1] Create dashboard route `src/features/dashboard/routes/index.tsx` at path `/`: renders four panels via `useDashboardData`; each panel independently shows loading skeleton, data, error, or unavailable state (FR-017)
+- [x] T047 [P] [US1] Add session info to `PageLayout` header: signed-in username and IRIS version from `useSession` (FR-003); sign-out button calls `useSignOut`
+- [x] T048 [P] [US1] Add i18n translations for auth and dashboard in `src/shared/i18n/locales/en/auth.json` and `src/shared/i18n/locales/en/dashboard.json`
 
 **Checkpoint**: Sign in, see dashboard with at least one live data panel. Quickstart S1 and S2 pass.
 

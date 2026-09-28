@@ -1,0 +1,17 @@
+{
+  "dashboard": "Dashboard",
+  "permissions": "Permissions",
+  "users": "Users",
+  "roles": "Roles",
+  "resources": "Resources",
+  "webApps": "Web Applications",
+  "securityResources": "Security Resources",
+  "x509": "X.509 Credentials",
+  "ssl": "SSL Configurations",
+  "wallets": "Wallets",
+  "oauth": "OAuth",
+  "tasks": "Tasks",
+  "system": "System",
+  "audit": "Audit Events",
+  "signOut": "Sign out"
+}

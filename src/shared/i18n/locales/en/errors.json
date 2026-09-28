@@ -1,0 +1,10 @@
+{
+  "networkError": "Network error — check your connection to the IRIS instance",
+  "sessionExpired": "Session expired — please sign in again",
+  "permissionDenied": "You do not have permission to perform this action",
+  "notFound": "Resource not found",
+  "conflict": "Conflict — the resource was changed since you loaded it",
+  "serverError": "Server error",
+  "unknown": "An unexpected error occurred",
+  "validationFailed": "Please correct the errors below"
+}
